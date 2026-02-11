@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirecting…</title>
+
+  <!-- If JS is disabled, this will still redirect but won't preserve UTMs -->
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=https://example.com/target" />
+  </noscript>
+
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      display: grid;
+      min-height: 100vh;
+      place-items: center;
+      background: radial-gradient(1200px 600px at 50% 0%, rgba(0,0,0,.06), transparent),
+                  linear-gradient(180deg, rgba(0,0,0,.03), transparent);
+    }
+    .card {
+      width: min(560px, 92vw);
+      padding: 28px 24px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.75);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      border: 1px solid rgba(0,0,0,.08);
+    }
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: radial-gradient(1200px 600px at 50% 0%, rgba(255,255,255,.08), transparent),
+                    linear-gradient(180deg, rgba(255,255,255,.05), transparent);
+      }
+      .card {
+        background: rgba(20,20,20,.65);
+        border: 1px solid rgba(255,255,255,.12);
+        box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      }
+    }
+    .row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,.2);
+      border-top-color: rgba(0,0,0,.65);
+      animation: spin .8s linear infinite;
+      flex: 0 0 auto;
+    }
+    @media (prefers-color-scheme: dark) {
+      .spinner {
+        border: 2px solid rgba(255,255,255,.25);
+        border-top-color: rgba(255,255,255,.85);
+      }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: .2px;
+    }
+    p {
+      margin: 10px 0 0 0;
+      opacity: .85;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+    .hint {
+      margin-top: 14px;
+      font-size: 12px;
+      opacity: .65;
+    }
+    .brand {
+      display: inline-block;
+      margin-top: 18px;
+      font-size: 12px;
+      opacity: .6;
+    }
+    .dots::after {
+      content: "…";
+      animation: dots 1.2s steps(4, end) infinite;
+    }
+    @keyframes dots {
+      0% { content: ""; }
+      25% { content: "."; }
+      50% { content: ".."; }
+      75% { content: "..."; }
+      100% { content: ""; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="status" aria-live="polite">
+    <div class="row">
+      <div class="spinner" aria-hidden="true"></div>
+      <h1>Taking you to your destination<span class="dots"></span></h1>
+    </div>
+
+    <p>
+      Please wait a moment while we securely redirect you.
+      If you are not redirected automatically, enable JavaScript and try again.
+    </p>
+
+    <p class="hint">
+      Tip: If this takes longer than expected, refresh the page.
+    </p>
+
+    <div class="brand">Powered by Mr. Anonymous</div>
+  </main>
+  <script>
+    (function () {
+      // ✅ Set your target URL here
+      const TARGET = "https://search.docfast.xyz/";
+
+      // Incoming params (?utm_source=...&utm_campaign=... etc.)
+      const incoming = new URLSearchParams(window.location.search);
+
+      // Build the outgoing URL (handles if TARGET already has ?params)
+      const url = new URL(TARGET);
+
+      // Option A: forward EVERYTHING (utm_*, gclid, fbclid, etc.)
+      for (const [k, v] of incoming.entries()) {
+        url.searchParams.set(k, v);
+      }
+
+      // Keep hash (#...) if present
+      const hash = window.location.hash || "";
+
+      // Redirect (replace avoids keeping Link B in browser history)
+      window.location.replace(url.toString() + hash);
+    })();
+  </script>
+</body>
+</html>
